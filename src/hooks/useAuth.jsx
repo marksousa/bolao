@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
-import { route } from '@routes'
+import { route } from '@/routes'
 
 export function useAuth() {
   const navigate = useNavigate()

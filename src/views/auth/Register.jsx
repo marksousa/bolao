@@ -11,7 +11,7 @@ function Register() {
   function handleSubmit(event) {
     event.preventDefault()
     const data = { name, email, password, password_confirmation: passwordConfirmation }
-    await register(data)
+    register(data)
 
     setPassword('')
     setPasswordConfirmation('')
