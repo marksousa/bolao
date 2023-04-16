@@ -1,7 +1,62 @@
 import { Outlet } from 'react-router-dom'
 import NamedLink from '@/components/NamedLink'
+import { useAuth } from '@/hooks/useAuth'
 
 function App() {
+  const { isLoggedIn, logout } = useAuth()
+
+  axios.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response?.status === 401) logout(true)
+      return Promise.reject(error)
+    },
+  )
+
+  function leftGuestLinks() {
+    return <>
+      <NamedLink name="home">
+        Home
+      </NamedLink>
+    </>
+  }
+
+  function leftAuthLinks() {
+    return <>
+      <NamedLink name="seasons.active">
+      Seasons
+      </NamedLink>
+      <NamedLink name="sports.index">
+      Sports
+      </NamedLink>
+    </>
+  }
+
+  function rightGuestLinks() {
+    return <>
+      <NamedLink name="login">
+        Login
+      </NamedLink>
+      <NamedLink name="register">
+        Register
+      </NamedLink>
+    </>
+  }
+
+  function rightAuthLinks() {
+    return <>
+      <NamedLink name="profile.edit">
+        Profile
+      </NamedLink>
+      <NamedLink name="profile.change-password">
+        Change Password
+      </NamedLink>
+      <button onClick={ logout } type="button" className="text-blue-600">
+        Logout
+      </button>
+    </>
+  }
+
   return (
     <div className="App">
       <header className="py-6 bg-gray-100 shadow">
@@ -14,19 +69,12 @@ function App() {
                 >
                   B
                 </div>
-                Bolao App
+                BolaoApp
               </h2>
-              <NamedLink name="home">
-                Home
-              </NamedLink>
-              <NamedLink name="sports.index">
-                Sports
-              </NamedLink>
+              { isLoggedIn ? leftAuthLinks() : leftGuestLinks() }
             </div>
             <div className="flex gap-4 items-center">
-              <NamedLink name="register">
-                Register
-              </NamedLink>
+              { isLoggedIn ? rightAuthLinks() : rightGuestLinks() }
             </div>
           </nav>
         </div>

@@ -1,20 +1,24 @@
 import { useState } from 'react'
-import { useAuth } from '@/hooks/useAuth'
+import { usePassword } from '@/hooks/usePassword'
 import ValidationError from '@/components/ValidationError'
 import IconSpinner from '@/components/IconSpinner'
 
-function Register() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+function ChangePassword() {
+  const [currentPassword, setCurrentPassword] = useState('')
   const [password, setPassword] = useState('')
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
-  const { register, errors, loading } = useAuth()
+  const { errors, loading, status, updatePassword } = usePassword()
 
   async function handleSubmit(event) {
     event.preventDefault()
 
-    await register({ name, email, password, password_confirmation: passwordConfirmation })
+    await updatePassword({
+      current_password: currentPassword,
+      password,
+      password_confirmation: passwordConfirmation,
+    })
 
+    setCurrentPassword('')
     setPassword('')
     setPasswordConfirmation('')
   }
@@ -23,36 +27,27 @@ function Register() {
     <form onSubmit={ handleSubmit } noValidate>
       <div className="flex flex-col mx-auto md:w-96 w-full">
 
-        <h1 className="heading">Register</h1>
+        <h1 className="heading">Change Password</h1>
+
+        { status &&
+          <div className="alert alert-success mb-4" role="alert">
+            { status }
+          </div>
+        }
 
         <div className="flex flex-col gap-2 mb-4">
-          <label htmlFor="name" className="required">Name</label>
+          <label htmlFor="current_password" className="required">Current Password</label>
           <input
-            id="name"
-            name="name"
-            type="text"
-            value={ name }
-            onChange={ event => setName(event.target.value) }
+            id="current_password"
+            name="current_password"
+            type="password"
+            value={ currentPassword }
+            onChange={ event => setCurrentPassword(event.target.value) }
             className="form-input"
-            autoComplete="name"
+            autoComplete="current-password"
             disabled={ loading }
           />
-          <ValidationError errors={ errors } field="name" />
-        </div>
-
-        <div className="flex flex-col gap-2 mb-4">
-          <label htmlFor="email" className="required">Email</label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            value={ email }
-            onChange={ event => setEmail(event.target.value) }
-            className="form-input"
-            autoComplete="email"
-            disabled={ loading }
-          />
-          <ValidationError errors={ errors } field="email" />
+          <ValidationError errors={ errors } field="current_password" />
         </div>
 
         <div className="flex flex-col gap-2 mb-4">
@@ -80,6 +75,7 @@ function Register() {
             onChange={ event => setPasswordConfirmation(event.target.value) }
             className="form-input"
             autoComplete="new-password"
+            disabled={ loading }
           />
         </div>
 
@@ -88,7 +84,7 @@ function Register() {
         <div className="flex flex-col gap-2 mb-4">
           <button type="submit" className="btn btn-primary" disabled={ loading }>
             { loading && <IconSpinner /> }
-          Register
+            Update Password
           </button>
         </div>
       </div>
@@ -96,4 +92,4 @@ function Register() {
   )
 }
 
-export default Register
+export default ChangePassword
