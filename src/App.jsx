@@ -67,9 +67,9 @@ function App() {
                 <div
                   className="inline-flex items-center justify-center bg-blue-600 w-6 h-6 text-center text-white rounded mr-1"
                 >
-                  B
+                  P
                 </div>
-                BolaoApp
+                Palpiteiro
               </h2>
               { isLoggedIn ? leftAuthLinks() : leftGuestLinks() }
             </div>
